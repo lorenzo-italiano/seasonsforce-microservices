@@ -1,0 +1,35 @@
+version: '3'
+
+services:
+  offers-db:
+    image: offers-db:latest
+    container_name: offers-db
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    networks:
+      - offers-network
+
+  offers-api:
+    image: offers-api:latest  # Remplacez par l'image de votre application Spring Boot
+    container_name: offers-api
+    depends_on:
+      - offers-db
+    networks:
+      - offers-network
+
+  api-gateway:
+      image: api-gateway:latest  # Remplacez par l'image de votre application Spring Boot
+      container_name: api-gateway
+      depends_on:
+        - offers-api
+      ports:
+        - "8090:8080"  # Si votre application écoute sur le port 8080
+      networks:
+        - offers-network
+
+networks:
+  offers-network:
+    driver: bridge
+
+volumes:
+  db_data: # This should match the name used in the services section above
