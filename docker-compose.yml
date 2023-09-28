@@ -4,6 +4,8 @@ services:
   offers-db: # Base de données postgresql pour les offres
     image: offers-db:latest
     container_name: offers-db
+    depends_on:
+      - discovery-service
     volumes:
       - db_data:/var/lib/postgresql/data
     networks:
@@ -30,8 +32,8 @@ services:
   discovery-service:
       image: discovery-service:latest  # Serveur discovery Eureka
       container_name: discovery-service
-      depends_on:
-          - api-gateway
+#      depends_on:
+#          - api-gateway
       ports:
           - "8761:8761"  # Sortie vers le port 8761
       networks:
