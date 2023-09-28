@@ -27,6 +27,16 @@ services:
       networks:
         - offers-network
 
+  discovery-service:
+      image: discovery-service:latest  # Serveur discovery Eureka
+      container_name: discovery-service
+      depends_on:
+          - api-gateway
+      ports:
+          - "8761:8761"  # Sortie vers le port 8761
+      networks:
+          - offers-network
+
 networks:
   offers-network:
     driver: bridge
