@@ -7,3 +7,6 @@
 [submodule "seasonsforce-ms-discovery-service"]
 	path = seasonsforce-ms-discovery-service
 	url = https://github.com/lorenzo-italiano/seasonsforce-ms-discovery-service.git
+[submodule "seasonsforce-ms-config-server"]
+	path = seasonsforce-ms-config-server
+	url = https://github.com/lorenzo-italiano/seasonsforce-ms-config-server.git
