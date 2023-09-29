@@ -16,6 +16,7 @@ services:
     container_name: offers-api
     depends_on:
       - offers-db
+      - config-server
     networks:
       - offers-network
 
@@ -36,6 +37,12 @@ services:
           - "8761:8761"  # Sortie vers le port 8761
       networks:
           - offers-network
+
+  config-server:
+    image: config-server:latest  # Serveur discovery Eureka
+    container_name: config-server
+    networks:
+      - offers-network
 
 networks:
   offers-network:
