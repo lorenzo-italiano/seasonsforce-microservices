@@ -10,3 +10,6 @@
 [submodule "seasonsforce-ms-config-server"]
 	path = seasonsforce-ms-config-server
 	url = https://github.com/lorenzo-italiano/seasonsforce-ms-config-server.git
+[submodule "seasonsforce-ms-configuration"]
+	path = seasonsforce-ms-configuration
+	url = https://github.com/lorenzo-italiano/seasonsforce-ms-configuration.git
