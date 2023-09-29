@@ -33,6 +33,8 @@ services:
   discovery-service:
       image: discovery-service:latest  # Serveur discovery Eureka
       container_name: discovery-service
+      depends_on:
+        - config-server
       ports:
           - "8761:8761"  # Sortie vers le port 8761
       networks:
