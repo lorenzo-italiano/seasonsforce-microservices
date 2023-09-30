@@ -13,3 +13,6 @@
 [submodule "seasonsforce-ms-configuration"]
 	path = seasonsforce-ms-configuration
 	url = https://github.com/lorenzo-italiano/seasonsforce-ms-configuration.git
+[submodule "seasonsforce-ms-address-api"]
+	path = seasonsforce-ms-address-api
+	url = https://github.com/lorenzo-italiano/seasonsforce-ms-address-api.git
