@@ -5,7 +5,7 @@ services:
     image: offers-db:latest
     container_name: offers-db
     volumes:
-      - db_data:/var/lib/postgresql/data
+      - offers-db_data:/var/lib/postgresql/data
     networks:
       - offers-network
 
@@ -17,6 +17,24 @@ services:
       - offers-db
     networks:
       - offers-network
+      - api-gateway
+
+  address-db: # Base de données postgresql pour les adresses
+    image: address-db:latest
+    container_name: address-db
+    volumes:
+      - address-db_data:/var/lib/postgresql/data
+    networks:
+      - address-network
+
+  address-api:
+    image: address-api:latest  # API Spring Boot pour les offres
+    container_name: address-api
+    depends_on:
+      - config-server
+      - address-db
+    networks:
+      - address-network
       - api-gateway
 
   api-gateway:
@@ -51,7 +69,9 @@ services:
 
 networks:
   offers-network:
+  address-network:
   api-gateway:
 
 volumes:
-  db_data:
+  offers-db_data:
+  address-db_data:
