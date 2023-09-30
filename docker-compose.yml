@@ -4,8 +4,6 @@ services:
   offers-db: # Base de données postgresql pour les offres
     image: offers-db:latest
     container_name: offers-db
-    depends_on:
-      - discovery-service
     volumes:
       - db_data:/var/lib/postgresql/data
     networks:
@@ -15,20 +13,23 @@ services:
     image: offers-api:latest  # API Spring Boot pour les offres
     container_name: offers-api
     depends_on:
-      - offers-db
       - config-server
+      - offers-db
     networks:
       - offers-network
+      - api-gateway
 
   api-gateway:
       image: api-gateway:latest  # API Spring Gateway
       container_name: api-gateway
       depends_on:
+        - config-server
         - offers-api
+        - discovery-service
       ports:
         - "8090:8080"  # Sortie vers le port 8090
       networks:
-        - offers-network
+        - api-gateway
 
   discovery-service:
       image: discovery-service:latest  # Serveur discovery Eureka
@@ -38,17 +39,19 @@ services:
       ports:
           - "8761:8761"  # Sortie vers le port 8761
       networks:
-          - offers-network
+        - api-gateway
 
   config-server:
     image: config-server:latest  # Serveur discovery Eureka
     container_name: config-server
+    ports:
+        - "4300:8888"  # Sortie vers le port 8080
     networks:
-      - offers-network
+      - api-gateway
 
 networks:
   offers-network:
-    driver: bridge
+  api-gateway:
 
 volumes:
   db_data:
