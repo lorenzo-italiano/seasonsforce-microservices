@@ -16,3 +16,6 @@
 [submodule "seasonsforce-ms-address-api"]
 	path = seasonsforce-ms-address-api
 	url = https://github.com/lorenzo-italiano/seasonsforce-ms-address-api.git
+[submodule "seasonsforce-ms-company-api"]
+	path = seasonsforce-ms-company-api
+	url = https://github.com/lorenzo-italiano/seasonsforce-ms-company-api.git
