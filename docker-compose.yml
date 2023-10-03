@@ -1,22 +1,58 @@
 version: '3'
 
 services:
-  offers-db: # Base de données postgresql pour les offres
-    image: offers-db:latest
-    container_name: offers-db
+  offer-db: # Base de données postgresql pour les offres
+    image: offer-db:latest
+    container_name: offer-db
     volumes:
-      - db_data:/var/lib/postgresql/data
+      - offer-db_data:/var/lib/postgresql/data
     networks:
-      - offers-network
+      - offer-network
 
-  offers-api:
-    image: offers-api:latest  # API Spring Boot pour les offres
-    container_name: offers-api
+  offer-api:
+    image: offer-api:latest  # API Spring Boot pour les offres
+    container_name: offer-api
     depends_on:
       - config-server
-      - offers-db
+      - offer-db
     networks:
-      - offers-network
+      - offer-network
+      - api-gateway
+
+  address-db: # Base de données postgresql pour les adresses
+    image: address-db:latest
+    container_name: address-db
+    volumes:
+      - address-db_data:/var/lib/postgresql/data
+    networks:
+      - address-network
+
+  address-api:
+    image: address-api:latest  # API Spring Boot pour les offres
+    container_name: address-api
+    depends_on:
+      - config-server
+      - address-db
+    networks:
+      - address-network
+      - api-gateway
+
+  company-db: # Base de données postgresql pour les adresses
+    image: company-db:latest
+    container_name: company-db
+    volumes:
+      - company-db_data:/var/lib/postgresql/data
+    networks:
+      - company-network
+
+  company-api:
+    image: company-api:latest  # API Spring Boot pour les offres
+    container_name: company-api
+    depends_on:
+      - config-server
+      - company-db
+    networks:
+      - company-network
       - api-gateway
 
   api-gateway:
@@ -24,7 +60,7 @@ services:
       container_name: api-gateway
       depends_on:
         - config-server
-        - offers-api
+        - offer-api
         - discovery-service
       ports:
         - "8090:8080"  # Sortie vers le port 8090
@@ -50,8 +86,12 @@ services:
       - api-gateway
 
 networks:
-  offers-network:
+  offer-network:
+  address-network:
+  company-network:
   api-gateway:
 
 volumes:
-  db_data:
+  offer-db_data:
+  address-db_data:
+  company-db_data:
