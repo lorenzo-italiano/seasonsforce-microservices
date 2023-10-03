@@ -37,6 +37,24 @@ services:
       - address-network
       - api-gateway
 
+  company-db: # Base de données postgresql pour les adresses
+    image: company-db:latest
+    container_name: company-db
+    volumes:
+      - company-db_data:/var/lib/postgresql/data
+    networks:
+      - company-network
+
+  company-api:
+    image: company-api:latest  # API Spring Boot pour les offres
+    container_name: company-api
+    depends_on:
+      - config-server
+      - company-db
+    networks:
+      - company-network
+      - api-gateway
+
   api-gateway:
       image: api-gateway:latest  # API Spring Gateway
       container_name: api-gateway
@@ -70,8 +88,10 @@ services:
 networks:
   offers-network:
   address-network:
+  company-network:
   api-gateway:
 
 volumes:
   offers-db_data:
   address-db_data:
+  company-db_data:
