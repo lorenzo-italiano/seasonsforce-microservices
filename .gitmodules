@@ -1,9 +1,9 @@
 [submodule "seasonsforce-ms-api-gateway"]
 	path = seasonsforce-ms-api-gateway
 	url = https://github.com/lorenzo-italiano/seasonsforce-ms-api-gateway.git
-[submodule "seasonsforce-ms-offers-api"]
-	path = seasonsforce-ms-offers-api
-	url = https://github.com/lorenzo-italiano/seasonsforce-ms-offers-api.git
+[submodule "seasonsforce-ms-offer-api"]
+	path = seasonsforce-ms-offer-api
+	url = https://github.com/lorenzo-italiano/seasonsforce-ms-offer-api.git
 [submodule "seasonsforce-ms-discovery-service"]
 	path = seasonsforce-ms-discovery-service
 	url = https://github.com/lorenzo-italiano/seasonsforce-ms-discovery-service.git
