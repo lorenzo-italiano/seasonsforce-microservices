@@ -1,7 +1,7 @@
 version: '3'
 
 services:
-  offer-db: # Base de données postgresql pour les offres
+  offer-db: # Postgresql database for offers
     image: offer-db:latest
     container_name: offer-db
     volumes:
@@ -10,7 +10,7 @@ services:
       - offer-network
 
   offer-api:
-    image: offer-api:latest  # API Spring Boot pour les offres
+    image: offer-api:latest  # Spring Boot API for offers
     container_name: offer-api
     depends_on:
       - config-server
@@ -19,7 +19,7 @@ services:
       - offer-network
       - api-gateway
 
-  address-db: # Base de données postgresql pour les adresses
+  address-db: # Postgresql database for addresses
     image: address-db:latest
     container_name: address-db
     volumes:
@@ -28,7 +28,7 @@ services:
       - address-network
 
   address-api:
-    image: address-api:latest  # API Spring Boot pour les offres
+    image: address-api:latest  # Spring Boot API for addresses
     container_name: address-api
     depends_on:
       - config-server
@@ -37,7 +37,7 @@ services:
       - address-network
       - api-gateway
 
-  company-db: # Base de données postgresql pour les adresses
+  company-db: # Postgresql database for companies
     image: company-db:latest
     container_name: company-db
     volumes:
@@ -46,7 +46,7 @@ services:
       - company-network
 
   company-api:
-    image: company-api:latest  # API Spring Boot pour les offres
+    image: company-api:latest  # Spring Boot API for companies
     container_name: company-api
     depends_on:
       - config-server
@@ -56,32 +56,32 @@ services:
       - api-gateway
 
   api-gateway:
-      image: api-gateway:latest  # API Spring Gateway
+      image: api-gateway:latest  # Spring API Gateway
       container_name: api-gateway
       depends_on:
         - config-server
         - offer-api
         - discovery-service
       ports:
-        - "8090:8080"  # Sortie vers le port 8090
+        - "8090:8080"  # Output to port 8090
       networks:
         - api-gateway
 
   discovery-service:
-      image: discovery-service:latest  # Serveur discovery Eureka
+      image: discovery-service:latest  # Discovery server Eureka
       container_name: discovery-service
       depends_on:
         - config-server
       ports:
-          - "8761:8761"  # Sortie vers le port 8761
+          - "8761:8761"  # Output to port 8761
       networks:
         - api-gateway
 
   config-server:
-    image: config-server:latest  # Serveur discovery Eureka
+    image: config-server:latest  # Spring Cloud Config Server
     container_name: config-server
     ports:
-        - "4300:8888"  # Sortie vers le port 8080
+        - "4300:8888"  # Output to port 4300
     networks:
       - api-gateway
 
