@@ -17,7 +17,7 @@ services:
       - offer-db
     networks:
       - offer-network
-      - api-gateway
+      - api-network
 
   address-db: # Postgresql database for addresses
     image: address-db:latest
@@ -35,7 +35,7 @@ services:
       - address-db
     networks:
       - address-network
-      - api-gateway
+      - api-network
 
   company-db: # Postgresql database for companies
     image: company-db:latest
@@ -53,7 +53,7 @@ services:
       - company-db
     networks:
       - company-network
-      - api-gateway
+      - api-network
 
   api-gateway:
       image: api-gateway:latest  # Spring API Gateway
@@ -65,7 +65,7 @@ services:
       ports:
         - "8090:8080"  # Output to port 8090
       networks:
-        - api-gateway
+        - api-network
 
   discovery-service:
       image: discovery-service:latest  # Discovery server Eureka
@@ -75,7 +75,7 @@ services:
       ports:
           - "8761:8761"  # Output to port 8761
       networks:
-        - api-gateway
+        - api-network
 
   config-server:
     image: config-server:latest  # Spring Cloud Config Server
@@ -83,15 +83,37 @@ services:
     ports:
         - "4300:8888"  # Output to port 4300
     networks:
-      - api-gateway
+      - api-network
+
+  keycloak:
+    image: keycloak-srv:latest
+    hostname: keycloak-srv
+    ports:
+        - "9090:8080"
+    build: .
+    depends_on:
+        - keycloak-db
+    networks:
+        - keycloak-network
+        - api-network
+
+  keycloak-db:
+    image: keycloak-db:latest
+    hostname: keycloak-db
+    volumes:
+        - keycloak-db_data:/var/lib/postgresql/data
+    networks:
+        - keycloak-network
 
 networks:
   offer-network:
   address-network:
   company-network:
-  api-gateway:
+  api-network:
+  keycloak-network:
 
 volumes:
   offer-db_data:
   address-db_data:
   company-db_data:
+  keycloak-db_data:

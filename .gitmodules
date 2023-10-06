@@ -19,3 +19,6 @@
 [submodule "seasonsforce-ms-offer-api"]
 	path = seasonsforce-ms-offer-api
 	url = https://github.com/lorenzo-italiano/seasonsforce-ms-offer-api.git
+[submodule "seasonsforce-ms-keycloak"]
+	path = seasonsforce-ms-keycloak
+	url = https://github.com/lorenzo-italiano/seasonsforce-ms-keycloak.git
