@@ -5,15 +5,15 @@
 [submodule "seasonsforce-ms-discovery-service"]
 	path = seasonsforce-ms-discovery-service
 	url = https://github.com/lorenzo-italiano/seasonsforce-ms-discovery-service.git
-	branch = develop
+	branch = main
 [submodule "seasonsforce-ms-config-server"]
 	path = seasonsforce-ms-config-server
 	url = https://github.com/lorenzo-italiano/seasonsforce-ms-config-server.git
-	branch = develop
+	branch = main
 [submodule "seasonsforce-ms-configuration"]
 	path = seasonsforce-ms-configuration
 	url = https://github.com/lorenzo-italiano/seasonsforce-ms-configuration.git
-	branch = develop
+	branch = main
 [submodule "seasonsforce-ms-address-api"]
 	path = seasonsforce-ms-address-api
 	url = https://github.com/lorenzo-italiano/seasonsforce-ms-address-api.git
