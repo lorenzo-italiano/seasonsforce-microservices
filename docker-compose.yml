@@ -15,6 +15,7 @@ services:
     depends_on:
       - config-server
       - offer-db
+      - keycloak-server
     networks:
       - offer-network
       - api-network
@@ -33,6 +34,7 @@ services:
     depends_on:
       - config-server
       - address-db
+      - keycloak-server
     networks:
       - address-network
       - api-network
@@ -51,6 +53,7 @@ services:
     depends_on:
       - config-server
       - company-db
+      - keycloak-server
     networks:
       - company-network
       - api-network
@@ -62,6 +65,7 @@ services:
         - config-server
         - offer-api
         - discovery-service
+        - keycloak-server
       ports:
         - "8090:8080"  # Output to port 8090
       networks:
@@ -85,9 +89,10 @@ services:
     networks:
       - api-network
 
-  keycloak:
-    image: keycloak-srv:latest
-    hostname: keycloak-srv
+  keycloak-server:
+    image: keycloak-server:latest
+    hostname: keycloak-server
+    container_name: keycloak-server
     ports:
         - "9090:8080"
     build: .
@@ -100,6 +105,7 @@ services:
   keycloak-db:
     image: keycloak-db:latest
     hostname: keycloak-db
+    container_name: keycloak-db
     volumes:
         - keycloak-db_data:/var/lib/postgresql/data
     networks:
