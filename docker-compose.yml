@@ -32,9 +32,15 @@ services:
     image: address-api:latest  # Spring Boot API for addresses
     container_name: address-api
     depends_on:
-      - config-server
-      - address-db
-      - keycloak-server
+      keycloak-server:
+          condition:
+            service_healthy
+      config-server:
+        condition:
+          service_started
+      address-db:
+        condition:
+          service_started
     networks:
       - address-network
       - api-network
@@ -98,6 +104,11 @@ services:
     build: .
     depends_on:
         - keycloak-db
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://0.0.0.0:8080/health/ready" ]
+      interval: 30s
+      retries: 3
+      timeout: 5s
     networks:
         - keycloak-network
         - api-network
