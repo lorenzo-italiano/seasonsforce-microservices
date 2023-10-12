@@ -105,9 +105,9 @@ services:
     depends_on:
         - keycloak-db
     healthcheck:
-      test: [ "CMD", "curl", "-f", "http://0.0.0.0:8080/health/ready" ]
-      interval: 30s
-      retries: 3
+      test: [ "CMD-SHELL", "bash -c 'echo -n > /dev/tcp/0.0.0.0/8080'"]
+      interval: 10s
+      retries: 30
       timeout: 5s
     networks:
         - keycloak-network
