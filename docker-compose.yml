@@ -47,6 +47,18 @@ services:
     networks:
       - company-network
 
+  company-minio: # Minio database for companies
+    image: company-minio:latest
+    container_name: company-minio
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - company-minio-data:/data
+    networks:
+      - company-network
+      - api-network
+
   company-api:
     image: company-api:latest  # Spring Boot API for companies
     container_name: company-api
@@ -54,6 +66,7 @@ services:
       - config-server
       - company-db
       - keycloak-server
+      - company-minio
     networks:
       - company-network
       - api-network
@@ -123,3 +136,4 @@ volumes:
   address-db_data:
   company-db_data:
   keycloak-db_data:
+  company-minio-data:
