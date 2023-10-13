@@ -1,6 +1,7 @@
 version: '3'
 
 services:
+
   offer-db: # Postgresql database for offers
     image: offer-db:latest
     container_name: offer-db
@@ -9,9 +10,9 @@ services:
     networks:
       - offer-network
     environment:
-      POSTGRES_USER: seasonsforce
-      POSTGRES_PASSWORD: seasonsforce
-      POSTGRES_DB: offer
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${OFFER_POSTGRES_DB}
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U seasonsforce -d offer"]
       interval: 30s
@@ -51,9 +52,9 @@ services:
     networks:
       - address-network
     environment:
-      POSTGRES_USER: seasonsforce
-      POSTGRES_PASSWORD: seasonsforce
-      POSTGRES_DB: address
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${ADDRESS_POSTGRES_DB}
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U seasonsforce -d address"]
       interval: 30s
@@ -93,9 +94,9 @@ services:
     networks:
       - company-network
     environment:
-      POSTGRES_USER: seasonsforce
-      POSTGRES_PASSWORD: seasonsforce
-      POSTGRES_DB: company
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${COMPANY_POSTGRES_DB}
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U seasonsforce -d company"]
       interval: 30s
@@ -110,6 +111,9 @@ services:
       - "9001:9001"
     volumes:
       - company-minio-data:/data
+    environment:
+        MINIO_ROOT_USER: ${COMPANY_MINIO_ROOT_USER}
+        MINIO_ROOT_PASSWORD: ${COMPANY_MINIO_ROOT_PASSWORD}
     networks:
       - company-network
       - api-network
