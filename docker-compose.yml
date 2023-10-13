@@ -8,17 +8,36 @@ services:
       - offer-db_data:/var/lib/postgresql/data
     networks:
       - offer-network
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready", "-d", "offer" ]
+      interval: 30s
+      timeout: 60s
+      retries: 5
 
   offer-api:
     image: offer-api:latest  # Spring Boot API for offers
     container_name: offer-api
     depends_on:
-      - config-server
-      - offer-db
-      - keycloak-server
+      offer-db:
+        condition:
+          service_healthy
+      keycloak-server:
+        condition:
+          service_healthy
+      discovery-service:
+        condition:
+          service_healthy
+      config-server:
+        condition:
+          service_healthy
     networks:
       - offer-network
       - api-network
+    healthcheck:
+      test: "curl --fail --silent localhost:8080/actuator/health | grep UP || exit 1"
+      interval: 20s
+      timeout: 5s
+      retries: 15
 
   address-db: # Postgresql database for addresses
     image: address-db:latest
@@ -27,23 +46,36 @@ services:
       - address-db_data:/var/lib/postgresql/data
     networks:
       - address-network
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready", "-d", "address" ]
+      interval: 30s
+      timeout: 60s
+      retries: 5
 
   address-api:
     image: address-api:latest  # Spring Boot API for addresses
     container_name: address-api
     depends_on:
-      keycloak-server:
-          condition:
-            service_healthy
-      config-server:
-        condition:
-          service_started
       address-db:
         condition:
-          service_started
+          service_healthy
+      keycloak-server:
+        condition:
+          service_healthy
+      discovery-service:
+        condition:
+          service_healthy
+      config-server:
+        condition:
+          service_healthy
     networks:
       - address-network
       - api-network
+    healthcheck:
+      test: "curl --fail --silent localhost:8080/actuator/health | grep UP || exit 1"
+      interval: 20s
+      timeout: 5s
+      retries: 15
 
   company-db: # Postgresql database for companies
     image: company-db:latest
@@ -52,6 +84,11 @@ services:
       - company-db_data:/var/lib/postgresql/data
     networks:
       - company-network
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready", "-d", "company" ]
+      interval: 30s
+      timeout: 60s
+      retries: 5
 
   company-minio: # Minio database for companies
     image: company-minio:latest
@@ -64,41 +101,76 @@ services:
     networks:
       - company-network
       - api-network
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:9000/minio/health/live" ]
+      interval: 30s
+      timeout: 10s
+      retries: 15
 
   company-api:
     image: company-api:latest  # Spring Boot API for companies
     container_name: company-api
     depends_on:
-      - config-server
-      - company-db
-      - keycloak-server
-      - company-minio
+      company-db:
+        condition:
+          service_healthy
+      company-minio:
+        condition:
+          service_healthy
+      keycloak-server:
+        condition:
+          service_healthy
+      discovery-service:
+        condition:
+          service_healthy
+      config-server:
+        condition:
+          service_healthy
     networks:
       - company-network
       - api-network
+    healthcheck:
+      test: "curl --fail --silent localhost:8080/actuator/health | grep UP || exit 1"
+      interval: 20s
+      timeout: 5s
+      retries: 15
 
   api-gateway:
       image: api-gateway:latest  # Spring API Gateway
       container_name: api-gateway
       depends_on:
-        - config-server
-        - offer-api
-        - discovery-service
-        - keycloak-server
+        config-server:
+            condition:
+                service_healthy
+        discovery-service:
+            condition:
+                service_healthy
       ports:
         - "8090:8080"  # Output to port 8090
       networks:
         - api-network
+      healthcheck:
+        test: "curl --fail --silent localhost:8080/actuator/health | grep UP || exit 1"
+        interval: 20s
+        timeout: 5s
+        retries: 15
 
   discovery-service:
       image: discovery-service:latest  # Discovery server Eureka
       container_name: discovery-service
       depends_on:
-        - config-server
+        config-server:
+          condition:
+            service_healthy
       ports:
           - "8761:8761"  # Output to port 8761
       networks:
         - api-network
+      healthcheck:
+        test: "curl --fail --silent localhost:8080/actuator/health | grep UP || exit 1"
+        interval: 20s
+        timeout: 5s
+        retries: 15
 
   config-server:
     image: config-server:latest  # Spring Cloud Config Server
@@ -107,21 +179,36 @@ services:
         - "4300:8888"  # Output to port 4300
     networks:
       - api-network
+    healthcheck:
+      test: "curl --fail --silent localhost:8080/actuator/health | grep UP || exit 1"
+      interval: 20s
+      timeout: 5s
+      retries: 15
 
   keycloak-server:
     image: keycloak-server:latest
     hostname: keycloak-server
     container_name: keycloak-server
     ports:
-        - "9090:8080"
+      - ${KEYCLOAK_PORT}
     build: .
     depends_on:
-        - keycloak-db
+        keycloak-db:
+            condition:
+                service_healthy
+    environment:
+      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN}
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
+      KC_DB_URL_HOST: ${KC_DB_URL_HOST}
+      KC_DB_PASSWORD: ${KC_DB_PASSWORD}
+      KC_DB: ${KC_DB}
+      KC_DB_USERNAME: ${KC_DB_USERNAME}
+      KC_HEALTH_ENABLED: ${KC_HEALTH_ENABLED}
     healthcheck:
-      test: [ "CMD-SHELL", "bash -c 'echo -n > /dev/tcp/0.0.0.0/8080'"]
-      interval: 10s
-      retries: 30
-      timeout: 5s
+        test: [ "CMD-SHELL", "bash -c 'echo -n > /dev/tcp/0.0.0.0/8080'"]
+        interval: 10s
+        retries: 30
+        timeout: 5s
     networks:
         - keycloak-network
         - api-network
@@ -132,8 +219,19 @@ services:
     container_name: keycloak-db
     volumes:
         - keycloak-db_data:/var/lib/postgresql/data
+    ports:
+      - ${KC_POSTGRES_PORT}
     networks:
         - keycloak-network
+    environment:
+      POSTGRES_DB: ${KC_POSTGRES_DB}
+      POSTGRES_USER: ${KC_POSTGRES_USER}
+      POSTGRES_PASSWORD: ${KC_POSTGRES_PASSWORD}
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready", "-d", "keycloak" ]
+      interval: 30s
+      timeout: 60s
+      retries: 5
 
 networks:
   offer-network:
