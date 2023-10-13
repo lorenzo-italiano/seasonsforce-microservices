@@ -8,8 +8,12 @@ services:
       - offer-db_data:/var/lib/postgresql/data
     networks:
       - offer-network
+    environment:
+      POSTGRES_USER: seasonsforce
+      POSTGRES_PASSWORD: seasonsforce
+      POSTGRES_DB: offer
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready", "-d", "offer" ]
+      test: ["CMD-SHELL", "pg_isready -U seasonsforce -d offer"]
       interval: 30s
       timeout: 60s
       retries: 5
@@ -46,8 +50,12 @@ services:
       - address-db_data:/var/lib/postgresql/data
     networks:
       - address-network
+    environment:
+      POSTGRES_USER: seasonsforce
+      POSTGRES_PASSWORD: seasonsforce
+      POSTGRES_DB: address
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready", "-d", "address" ]
+      test: ["CMD-SHELL", "pg_isready -U seasonsforce -d address"]
       interval: 30s
       timeout: 60s
       retries: 5
@@ -84,8 +92,12 @@ services:
       - company-db_data:/var/lib/postgresql/data
     networks:
       - company-network
+    environment:
+      POSTGRES_USER: seasonsforce
+      POSTGRES_PASSWORD: seasonsforce
+      POSTGRES_DB: company
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready", "-d", "company" ]
+      test: ["CMD-SHELL", "pg_isready -U seasonsforce -d company"]
       interval: 30s
       timeout: 60s
       retries: 5
@@ -228,7 +240,7 @@ services:
       POSTGRES_USER: ${KC_POSTGRES_USER}
       POSTGRES_PASSWORD: ${KC_POSTGRES_PASSWORD}
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready", "-d", "keycloak" ]
+      test: ["CMD-SHELL", "pg_isready -U keycloak -d keycloak"]
       interval: 30s
       timeout: 60s
       retries: 5
