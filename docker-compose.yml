@@ -9,10 +9,7 @@ services:
       - offer-db_data:/var/lib/postgresql/data
     networks:
       - offer-network
-    environment:
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${OFFER_POSTGRES_DB}
+    env_file: ./env/offer/database.env
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U seasonsforce -d offer"]
       interval: 30s
@@ -51,10 +48,7 @@ services:
       - address-db_data:/var/lib/postgresql/data
     networks:
       - address-network
-    environment:
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${ADDRESS_POSTGRES_DB}
+    env_file: ./env/address/database.env
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U seasonsforce -d address"]
       interval: 30s
@@ -93,10 +87,7 @@ services:
       - company-db_data:/var/lib/postgresql/data
     networks:
       - company-network
-    environment:
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${COMPANY_POSTGRES_DB}
+    env_file: ./env/company/database.env
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U seasonsforce -d company"]
       interval: 30s
@@ -111,9 +102,7 @@ services:
       - "9001:9001"
     volumes:
       - company-minio-data:/data
-    environment:
-        MINIO_ROOT_USER: ${COMPANY_MINIO_ROOT_USER}
-        MINIO_ROOT_PASSWORD: ${COMPANY_MINIO_ROOT_PASSWORD}
+    env_file: ./env/company/minio.env
     networks:
       - company-network
       - api-network
@@ -206,20 +195,13 @@ services:
     hostname: keycloak-server
     container_name: keycloak-server
     ports:
-      - ${KEYCLOAK_PORT}
+      - "9090:8080"
     build: .
     depends_on:
         keycloak-db:
             condition:
                 service_healthy
-    environment:
-      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN}
-      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
-      KC_DB_URL_HOST: ${KC_DB_URL_HOST}
-      KC_DB_PASSWORD: ${KC_DB_PASSWORD}
-      KC_DB: ${KC_DB}
-      KC_DB_USERNAME: ${KC_DB_USERNAME}
-      KC_HEALTH_ENABLED: ${KC_HEALTH_ENABLED}
+    env_file: ./env/keycloak/server.env
     healthcheck:
         test: [ "CMD-SHELL", "bash -c 'echo -n > /dev/tcp/0.0.0.0/8080'"]
         interval: 10s
@@ -236,13 +218,10 @@ services:
     volumes:
         - keycloak-db_data:/var/lib/postgresql/data
     ports:
-      - ${KC_POSTGRES_PORT}
+      - "5432"
     networks:
         - keycloak-network
-    environment:
-      POSTGRES_DB: ${KC_POSTGRES_DB}
-      POSTGRES_USER: ${KC_POSTGRES_USER}
-      POSTGRES_PASSWORD: ${KC_POSTGRES_PASSWORD}
+    env_file: ./env/keycloak/database.env
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U keycloak -d keycloak"]
       interval: 30s
