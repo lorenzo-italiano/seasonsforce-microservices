@@ -71,6 +71,7 @@ services:
       config-server:
         condition:
           service_healthy
+    env_file: ./env/address/api.env
     networks:
       - address-network
       - api-network
