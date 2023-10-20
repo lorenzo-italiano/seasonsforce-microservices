@@ -158,6 +158,9 @@ services:
         discovery-service:
             condition:
                 service_healthy
+        keycloak-server:
+            condition:
+                service_healthy
       ports:
         - "8090:8080"  # Output to port 8090
       networks:
