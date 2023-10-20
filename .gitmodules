@@ -30,3 +30,6 @@
 	path = seasonsforce-ms-keycloak
 	url = https://github.com/lorenzo-italiano/seasonsforce-ms-keycloak.git
 	branch = main
+[submodule "seasonsforce-ms-user-api"]
+	path = seasonsforce-ms-user-api
+	url = https://github.com/lorenzo-italiano/seasonsforce-ms-user-api.git
