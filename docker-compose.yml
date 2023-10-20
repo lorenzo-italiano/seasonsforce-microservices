@@ -15,6 +15,7 @@ services:
       interval: 30s
       timeout: 60s
       retries: 5
+    restart: unless-stopped
 
   offer-api:
     image: offer-api:latest  # Spring Boot API for offers
@@ -40,6 +41,7 @@ services:
       interval: 20s
       timeout: 5s
       retries: 15
+    restart: unless-stopped
 
   address-db: # Postgresql database for addresses
     image: address-db:latest
@@ -54,6 +56,7 @@ services:
       interval: 30s
       timeout: 60s
       retries: 5
+    restart: unless-stopped
 
   address-api:
     image: address-api:latest  # Spring Boot API for addresses
@@ -80,6 +83,7 @@ services:
       interval: 20s
       timeout: 5s
       retries: 15
+    restart: unless-stopped
 
   company-db: # Postgresql database for companies
     image: company-db:latest
@@ -94,6 +98,7 @@ services:
       interval: 30s
       timeout: 60s
       retries: 5
+    restart: unless-stopped
 
   company-minio: # Minio database for companies
     image: company-minio:latest
@@ -112,6 +117,7 @@ services:
       interval: 30s
       timeout: 10s
       retries: 15
+    restart: unless-stopped
 
   company-api:
     image: company-api:latest  # Spring Boot API for companies
@@ -140,6 +146,7 @@ services:
       interval: 20s
       timeout: 5s
       retries: 15
+    restart: unless-stopped
 
   api-gateway:
       image: api-gateway:latest  # Spring API Gateway
@@ -161,6 +168,7 @@ services:
         interval: 20s
         timeout: 5s
         retries: 15
+      restart: unless-stopped
 
   discovery-service:
       image: discovery-service:latest  # Discovery server Eureka
@@ -178,6 +186,7 @@ services:
         interval: 20s
         timeout: 5s
         retries: 15
+      restart: unless-stopped
 
   config-server:
     image: config-server:latest  # Spring Cloud Config Server
@@ -191,6 +200,7 @@ services:
       interval: 10s
       timeout: 5s
       retries: 50
+    restart: unless-stopped
 
   keycloak-server:
     image: keycloak-server:latest
@@ -212,6 +222,7 @@ services:
     networks:
         - keycloak-network
         - api-network
+    restart: unless-stopped
 
   keycloak-db:
     image: keycloak-db:latest
@@ -229,6 +240,7 @@ services:
       interval: 30s
       timeout: 60s
       retries: 5
+    restart: unless-stopped
 
 networks:
   offer-network:
