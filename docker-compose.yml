@@ -155,6 +155,7 @@ services:
         - "8090:8080"  # Output to port 8090
       networks:
         - api-network
+      env_file: ./env/gateway/api.env
       healthcheck:
         test: "curl --fail --silent localhost:8080/actuator/health | grep UP || exit 1"
         interval: 20s
