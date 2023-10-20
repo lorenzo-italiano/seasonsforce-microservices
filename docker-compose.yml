@@ -148,6 +148,29 @@ services:
       retries: 15
     restart: unless-stopped
 
+  user-api:
+    image: user-api:latest  # Spring Boot API for users
+    container_name: user-api
+    depends_on:
+      keycloak-server:
+        condition:
+          service_healthy
+      discovery-service:
+        condition:
+          service_healthy
+      config-server:
+        condition:
+          service_healthy
+    networks:
+      - api-network
+    env_file: ./env/user/api.env
+    healthcheck:
+      test: "curl --fail --silent localhost:8080/actuator/health | grep UP || exit 1"
+      interval: 20s
+      timeout: 5s
+      retries: 15
+    restart: unless-stopped
+
   api-gateway:
       image: api-gateway:latest  # Spring API Gateway
       container_name: api-gateway
