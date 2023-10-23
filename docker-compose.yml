@@ -141,6 +141,8 @@ services:
     networks:
       - company-network
       - api-network
+    env_file:
+      - ./env/company/api.env
     healthcheck:
       test: "curl --fail --silent localhost:8080/actuator/health | grep UP || exit 1"
       interval: 20s
