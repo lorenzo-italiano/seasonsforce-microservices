@@ -34,3 +34,7 @@
 	path = seasonsforce-ms-user-api
 	url = https://github.com/lorenzo-italiano/seasonsforce-ms-user-api.git
 	branch = develop
+[submodule "seasonsforce-ms-reference-api"]
+	path = seasonsforce-ms-reference-api
+	url = https://github.com/lorenzo-italiano/seasonsforce-ms-reference-api.git
+	branch = develop
