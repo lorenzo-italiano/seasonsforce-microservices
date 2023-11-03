@@ -212,6 +212,48 @@ services:
         retries: 15
     restart: unless-stopped
 
+  experience-db: # Postgresql database for experiences
+    image: experience-db:latest
+    container_name: experience-db
+    volumes:
+      - experience-db_data:/var/lib/postgresql/data
+    networks:
+      - experience-network
+    env_file: ./env/experience/database.env
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U seasonsforce -d experience"]
+      interval: 30s
+      timeout: 60s
+      retries: 5
+    restart: unless-stopped
+
+  experience-api:
+    image: experience-api:latest  # Spring Boot API for experiences
+    container_name: experience-api
+    depends_on:
+      experience-db:
+        condition:
+          service_healthy
+      keycloak-server:
+        condition:
+          service_healthy
+      discovery-service:
+        condition:
+          service_healthy
+      config-server:
+        condition:
+          service_healthy
+    networks:
+      - experience-network
+      - api-network
+    env_file: ./env/experience/api.env
+    healthcheck:
+      test: "curl --fail --silent localhost:8080/actuator/health | grep UP || exit 1"
+      interval: 20s
+      timeout: 5s
+      retries: 15
+    restart: unless-stopped
+
   api-gateway:
       image: api-gateway:latest  # Spring API Gateway
       container_name: api-gateway
@@ -314,6 +356,7 @@ networks:
   address-network:
   company-network:
   reference-network:
+  experience-network:
   api-network:
   keycloak-network:
 
