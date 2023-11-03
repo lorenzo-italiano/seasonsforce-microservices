@@ -254,6 +254,48 @@ services:
       retries: 15
     restart: unless-stopped
 
+  availability-db: # Postgresql database for availabilities
+    image: availability-db:latest
+    container_name: availability-db
+    volumes:
+      - availability-db_data:/var/lib/postgresql/data
+    networks:
+      - availability-network
+    env_file: ./env/availability/database.env
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U seasonsforce -d availability"]
+      interval: 30s
+      timeout: 60s
+      retries: 5
+    restart: unless-stopped
+
+  availability-api: # Spring Boot API for availabilities
+    image: availability-api:latest
+    container_name: availability-api
+    depends_on:
+      availability-db:
+        condition:
+          service_healthy
+      keycloak-server:
+        condition:
+          service_healthy
+      discovery-service:
+        condition:
+          service_healthy
+      config-server:
+        condition:
+          service_healthy
+    networks:
+      - availability-network
+      - api-network
+    env_file: ./env/availability/api.env
+    healthcheck:
+      test: "curl --fail --silent localhost:8080/actuator/health | grep UP || exit 1"
+      interval: 20s
+      timeout: 5s
+      retries: 15
+    restart: unless-stopped
+
   api-gateway:
       image: api-gateway:latest  # Spring API Gateway
       container_name: api-gateway
@@ -357,6 +399,7 @@ networks:
   company-network:
   reference-network:
   experience-network:
+  availability-network:
   api-network:
   keycloak-network:
 
