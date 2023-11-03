@@ -42,3 +42,7 @@
 	path = seasonsforce-ms-experience-api
 	url = https://github.com/lorenzo-italiano/seasonsforce-ms-experience-api.git
 	branch = develop
+[submodule "seasonsforce-ms-availability-api"]
+	path = seasonsforce-ms-availability-api
+	url = https://github.com/lorenzo-italiano/seasonsforce-ms-availability-api.git
+	branch = develop
