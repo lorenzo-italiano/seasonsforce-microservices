@@ -408,5 +408,8 @@ volumes:
   offer-db_data:
   address-db_data:
   company-db_data:
+  reference-db_data:
+  experience-db_data:
+  availability-db_data:
   keycloak-db_data:
   company-minio-data:
