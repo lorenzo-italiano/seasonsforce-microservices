@@ -33,6 +33,7 @@ services:
       config-server:
         condition:
           service_healthy
+    env_file: ./env/offer/api.env
     networks:
       - offer-network
       - api-network
