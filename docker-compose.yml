@@ -151,6 +151,71 @@ services:
       retries: 15
     restart: unless-stopped
 
+  invoice-db: # Postgresql database for invoices
+    image: invoice-db:latest
+    container_name: invoice-db
+    volumes:
+      - invoice-db_data:/var/lib/postgresql/data
+    networks:
+      - invoice-network
+    env_file: ./env/invoice/database.env
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U seasonsforce -d invoice" ]
+      interval: 30s
+      timeout: 60s
+      retries: 5
+    restart: unless-stopped
+
+  invoice-minio: # Minio database for invoices
+    image: invoice-minio:latest
+    container_name: invoice-minio
+    ports:
+      - "9002:9000"
+      - "9003:9001"
+    volumes:
+      - invoice-minio-data:/data
+    env_file: ./env/invoice/minio.env
+    networks:
+      - invoice-network
+      - api-network
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:9000/minio/health/live" ]
+      interval: 30s
+      timeout: 10s
+      retries: 15
+    restart: unless-stopped
+
+  invoice-api:
+    image: invoice-api:latest  # Spring Boot API for invoices
+    container_name: invoice-api
+    depends_on:
+      invoice-db:
+        condition:
+          service_healthy
+      invoice-minio:
+        condition:
+          service_healthy
+      keycloak-server:
+        condition:
+          service_healthy
+      discovery-service:
+        condition:
+          service_healthy
+      config-server:
+        condition:
+          service_healthy
+    networks:
+      - invoice-network
+      - api-network
+    env_file:
+      - ./env/invoice/api.env
+    healthcheck:
+      test: "curl --fail --silent localhost:8080/actuator/health | grep UP || exit 1"
+      interval: 20s
+      timeout: 5s
+      retries: 15
+    restart: unless-stopped
+
   user-api:
     image: user-api:latest  # Spring Boot API for users
     container_name: user-api
@@ -398,6 +463,7 @@ networks:
   offer-network:
   address-network:
   company-network:
+  invoice-network:
   reference-network:
   experience-network:
   availability-network:
@@ -408,8 +474,10 @@ volumes:
   offer-db_data:
   address-db_data:
   company-db_data:
+  invoice-db_data:
   reference-db_data:
   experience-db_data:
   availability-db_data:
   keycloak-db_data:
   company-minio-data:
+  invoice-minio-data:

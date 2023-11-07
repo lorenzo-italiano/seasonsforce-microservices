@@ -46,3 +46,6 @@
 	path = seasonsforce-ms-availability-api
 	url = https://github.com/lorenzo-italiano/seasonsforce-ms-availability-api.git
 	branch = develop
+[submodule "seasonsforce-ms-invoice-api"]
+	path = seasonsforce-ms-invoice-api
+	url = https://github.com/lorenzo-italiano/seasonsforce-ms-invoice-api.git
