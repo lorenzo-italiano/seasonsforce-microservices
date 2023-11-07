@@ -132,8 +132,6 @@ public class MinioService {
 
 Here is an example of how to use minio in an API with a service:
 
-// TODO clean up java example
-
 ```java
 package fr.polytech.service;
 
