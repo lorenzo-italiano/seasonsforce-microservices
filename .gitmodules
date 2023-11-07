@@ -49,3 +49,4 @@
 [submodule "seasonsforce-ms-invoice-api"]
 	path = seasonsforce-ms-invoice-api
 	url = https://github.com/lorenzo-italiano/seasonsforce-ms-invoice-api.git
+	branch = develop
