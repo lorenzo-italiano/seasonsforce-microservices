@@ -113,11 +113,6 @@ services:
     networks:
       - company-network
       - api-network
-    healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:9000/minio/health/live" ]
-      interval: 30s
-      timeout: 10s
-      retries: 15
     restart: unless-stopped
 
   company-api:
@@ -129,7 +124,7 @@ services:
           service_healthy
       company-minio:
         condition:
-          service_healthy
+          service_started
       keycloak-server:
         condition:
           service_healthy
@@ -178,11 +173,6 @@ services:
     networks:
       - invoice-network
       - api-network
-    healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:9000/minio/health/live" ]
-      interval: 30s
-      timeout: 10s
-      retries: 15
     restart: unless-stopped
 
   invoice-api:
@@ -194,7 +184,7 @@ services:
           service_healthy
       invoice-minio:
         condition:
-          service_healthy
+          service_started
       keycloak-server:
         condition:
           service_healthy
