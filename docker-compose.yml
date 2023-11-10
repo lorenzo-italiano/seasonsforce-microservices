@@ -206,6 +206,20 @@ services:
       retries: 15
     restart: unless-stopped
 
+  user-minio: # Minio database for users
+    image: user-minio:latest
+    container_name: user-minio
+    ports:
+      - "9004:9000"
+      - "9005:9001"
+    volumes:
+      - user-minio-data:/data
+    env_file: ./env/user/minio.env
+    networks:
+      - api-network
+      - user-network
+    restart: unless-stopped
+
   user-api:
     image: user-api:latest  # Spring Boot API for users
     container_name: user-api
@@ -221,6 +235,7 @@ services:
           service_healthy
     networks:
       - api-network
+      - user-network
     env_file: ./env/user/api.env
     healthcheck:
       test: "curl --fail --silent localhost:8080/actuator/health | grep UP || exit 1"
@@ -457,6 +472,7 @@ networks:
   reference-network:
   experience-network:
   availability-network:
+  user-network:
   api-network:
   keycloak-network:
 
@@ -471,3 +487,4 @@ volumes:
   keycloak-db_data:
   company-minio-data:
   invoice-minio-data:
+  user-minio-data:
