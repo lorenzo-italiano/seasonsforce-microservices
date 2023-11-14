@@ -409,6 +409,48 @@ services:
       retries: 15
     restart: unless-stopped
 
+  review-db: # MongoDB database for reviews
+    image: review-db:latest
+    container_name: review-db
+    volumes:
+      - review-db_data:/data/db
+    networks:
+      - review-network
+    env_file: ./env/review/database.env
+    healthcheck:
+      test: ["CMD", "mongo", "--eval", "db.stats()"]
+      interval: 30s
+      timeout: 60s
+      retries: 5
+    restart: unless-stopped
+
+  review-api: # Kotlin Spring Boot API for reviews
+    image: review-api:latest
+    container_name: review-api
+    depends_on:
+      review-db:
+        condition:
+          service_healthy
+      keycloak-server:
+        condition:
+          service_healthy
+      discovery-service:
+        condition:
+          service_healthy
+      config-server:
+        condition:
+          service_healthy
+    networks:
+      - review-network
+      - api-network
+    env_file: ./env/review/api.env
+    healthcheck:
+      test: "curl --fail --silent localhost:8080/actuator/health | grep UP || exit 1"
+      interval: 30s
+      timeout: 60s
+      retries: 5
+    restart: unless-stopped
+
   api-gateway:
       image: api-gateway:latest  # Spring API Gateway
       container_name: api-gateway
@@ -516,6 +558,7 @@ networks:
   availability-network:
   payment-network:
   user-network:
+  review-network:
   api-network:
   keycloak-network:
 
