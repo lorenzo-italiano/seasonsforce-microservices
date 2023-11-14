@@ -57,3 +57,4 @@
 [submodule "seasonsforce-ms-review-api"]
 	path = seasonsforce-ms-review-api
 	url = https://github.com/lorenzo-italiano/seasonsforce-ms-review-api.git
+	branch = develop
