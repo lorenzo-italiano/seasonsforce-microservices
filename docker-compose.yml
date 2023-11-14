@@ -417,11 +417,6 @@ services:
     networks:
       - review-network
     env_file: ./env/review/database.env
-    healthcheck:
-      test: ["CMD", "mongo", "--eval", "db.stats()"]
-      interval: 30s
-      timeout: 60s
-      retries: 5
     restart: unless-stopped
 
   review-api: # Kotlin Spring Boot API for reviews
@@ -430,7 +425,7 @@ services:
     depends_on:
       review-db:
         condition:
-          service_healthy
+          service_started
       keycloak-server:
         condition:
           service_healthy
@@ -571,6 +566,7 @@ volumes:
   experience-db_data:
   availability-db_data:
   payment-db_data:
+  review-db_data:
   keycloak-db_data:
   company-minio-data:
   invoice-minio-data:
