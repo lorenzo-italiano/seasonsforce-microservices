@@ -446,6 +446,48 @@ services:
       retries: 5
     restart: unless-stopped
 
+  notification-db: # Postgresql database for notifications
+    image: notification-db:latest
+    container_name: notification-db
+    volumes:
+      - notification-db_data:/var/lib/postgresql/data
+    networks:
+      - notification-network
+    env_file: ./env/notification/database.env
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U seasonsforce -d notification"]
+      interval: 30s
+      timeout: 60s
+      retries: 5
+    restart: unless-stopped
+
+  notification-api: # Spring Boot API for notifications
+    image: notification-api:latest
+    container_name: notification-api
+    depends_on:
+      notification-db:
+        condition:
+          service_healthy
+      keycloak-server:
+        condition:
+          service_healthy
+      discovery-service:
+        condition:
+          service_healthy
+      config-server:
+        condition:
+          service_healthy
+    networks:
+      - notification-network
+      - api-network
+    env_file: ./env/notification/api.env
+    healthcheck:
+      test: "curl --fail --silent localhost:8080/actuator/health | grep UP || exit 1"
+      interval: 30s
+      timeout: 60s
+      retries: 5
+    restart: unless-stopped
+
   api-gateway:
       image: api-gateway:latest  # Spring API Gateway
       container_name: api-gateway
@@ -543,6 +585,35 @@ services:
       retries: 5
     restart: unless-stopped
 
+  kafka-server:
+    image: kafka-server:latest
+    hostname: kafka-server
+    container_name: kafka-server
+    ports:
+      - "9092:9092"
+    networks:
+      - kafka-network
+    volumes:
+      - kafka_data:/var/lib/kafka/data
+    env_file: ./env/kafka/kafka.env
+    depends_on:
+      zookeeper-server:
+        condition:
+          service_started
+
+  zookeeper-server:
+    image: zookeeper-server:latest
+    hostname: zookeeper-server
+    container_name: zookeeper-server
+    ports:
+      - "2181:2181"
+    networks:
+      - kafka-network
+    volumes:
+      - zookeeper_data:/data
+      - zookeeper_datalog:/datalog
+    env_file: ./env/kafka/zookeeper.env
+
 networks:
   offer-network:
   address-network:
@@ -555,6 +626,7 @@ networks:
   user-network:
   review-network:
   api-network:
+  kafka-network:
   keycloak-network:
 
 volumes:
@@ -571,3 +643,6 @@ volumes:
   company-minio-data:
   invoice-minio-data:
   user-minio-data:
+  zookeeper_data:
+  zookeeper_datalog:
+  kafka_data:
