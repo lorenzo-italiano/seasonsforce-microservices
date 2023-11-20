@@ -54,3 +54,11 @@
 	path = seasonsforce-ms-payment-api
 	url = https://github.com/lorenzo-italiano/seasonsforce-ms-payment-api.git
 	branch = develop
+[submodule "seasonsforce-ms-review-api"]
+	path = seasonsforce-ms-review-api
+	url = https://github.com/lorenzo-italiano/seasonsforce-ms-review-api.git
+	branch = develop
+[submodule "seasonsforce-ms-notification-api"]
+	path = seasonsforce-ms-notification-api
+	url = https://github.com/lorenzo-italiano/seasonsforce-ms-notification-api.git
+	branch = develop
