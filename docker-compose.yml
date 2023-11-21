@@ -33,6 +33,9 @@ services:
       config-server:
         condition:
           service_healthy
+      kafka-server:
+        condition:
+          service_healthy
     env_file: ./env/offer/api.env
     networks:
       - offer-network
@@ -446,19 +449,14 @@ services:
       retries: 5
     restart: unless-stopped
 
-  notification-db: # Postgresql database for notifications
+  notification-db: # Mongo database for notifications
     image: notification-db:latest
     container_name: notification-db
     volumes:
-      - notification-db_data:/var/lib/postgresql/data
+      - notification-db_data:/data/db
     networks:
       - notification-network
     env_file: ./env/notification/database.env
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U seasonsforce -d notification"]
-      interval: 30s
-      timeout: 60s
-      retries: 5
     restart: unless-stopped
 
   notification-api: # Spring Boot API for notifications
@@ -467,7 +465,7 @@ services:
     depends_on:
       notification-db:
         condition:
-          service_healthy
+          service_started
       keycloak-server:
         condition:
           service_healthy
@@ -475,6 +473,9 @@ services:
         condition:
           service_healthy
       config-server:
+        condition:
+          service_healthy
+      kafka-server:
         condition:
           service_healthy
     networks:
@@ -586,33 +587,43 @@ services:
     restart: unless-stopped
 
   kafka-server:
-    image: kafka-server:latest
+    image: confluentinc/cp-kafka:latest
     hostname: kafka-server
     container_name: kafka-server
     ports:
-      - "9092:9092"
+      - "9092"
     networks:
-      - kafka-network
+      - api-network
     volumes:
       - kafka_data:/var/lib/kafka/data
     env_file: ./env/kafka/kafka.env
     depends_on:
       zookeeper-server:
         condition:
-          service_started
+          service_healthy
+    healthcheck:
+      test: [ "CMD-SHELL", "kafka-topics --bootstrap-server kafka-server:9092 --list" ]
+      interval: 30s
+      timeout: 60s
+      retries: 5
 
   zookeeper-server:
-    image: zookeeper-server:latest
+    image: confluentinc/cp-zookeeper:latest
     hostname: zookeeper-server
     container_name: zookeeper-server
     ports:
-      - "2181:2181"
+      - "2181"
     networks:
-      - kafka-network
+      - api-network
     volumes:
-      - zookeeper_data:/data
-      - zookeeper_datalog:/datalog
+      - zookeeper_data:/var/lib/zookeeper/data
+      - zookeeper_datalog:/var/lib/zookeeper/log
     env_file: ./env/kafka/zookeeper.env
+    healthcheck:
+      test: ["CMD-SHELL", "zookeeper-shell zookeeper-server:2181 ls /"]
+      interval: 30s
+      timeout: 60s
+      retries: 5
 
 networks:
   offer-network:
@@ -625,6 +636,7 @@ networks:
   payment-network:
   user-network:
   review-network:
+  notification-network:
   api-network:
   kafka-network:
   keycloak-network:
@@ -639,6 +651,7 @@ volumes:
   availability-db_data:
   payment-db_data:
   review-db_data:
+  notification-db_data:
   keycloak-db_data:
   company-minio-data:
   invoice-minio-data:
