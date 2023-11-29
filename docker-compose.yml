@@ -539,6 +539,7 @@ services:
         - "4300:8888"  # Output to port 4300
     networks:
       - api-network
+    env_file: ./env/config/server.env
     healthcheck:
       test: "curl --fail --silent localhost:8888/actuator/health | grep UP || exit 1"
       interval: 10s
