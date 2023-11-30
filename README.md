@@ -22,6 +22,53 @@ In order to update all submodules, you must run the following command.
 ./update-submodules.sh
 ```
 
+## All the submodules
+
+<div style="display: flex; flex-direction: row; justify-content: center;">
+  <a target="_blank" href="https://github.com/lorenzo-italiano/seasonsforce-ms-address-api">
+    <img alt="github link" src="https://img.shields.io/badge/SEASONFORCE-Address-important?logo=github&style=for-the-badge">
+  </a>
+  <a target="_blank" href="https://github.com/lorenzo-italiano/seasonsforce-ms-availability-api">
+    <img alt="github link" src="https://img.shields.io/badge/SEASONFORCE-Availability-important?logo=github&style=for-the-badge">
+  </a>
+  <a target="_blank" href="https://github.com/lorenzo-italiano/seasonsforce-ms-company-api">
+    <img alt="github link" src="https://img.shields.io/badge/SEASONFORCE-Company-important?logo=github&style=for-the-badge">
+  </a>
+  <a target="_blank" href="https://github.com/lorenzo-italiano/seasonsforce-ms-config-server">
+    <img alt="github link" src="https://img.shields.io/badge/SEASONFORCE-Config Server-important?logo=github&style=for-the-badge">
+  </a>
+  <a target="_blank" href="https://github.com/lorenzo-italiano/seasonsforce-ms-discovery-service">
+    <img alt="github link" src="https://img.shields.io/badge/SEASONFORCE-Discovery Service-important?logo=github&style=for-the-badge">
+  </a>
+  <a target="_blank" href="https://github.com/lorenzo-italiano/seasonsforce-ms-experience-api">
+    <img alt="github link" src="https://img.shields.io/badge/SEASONFORCE-Experience-important?logo=github&style=for-the-badge">
+  </a>
+  <a target="_blank" href="https://github.com/lorenzo-italiano/seasonsforce-ms-invoice-api">
+    <img alt="github link" src="https://img.shields.io/badge/SEASONFORCE-Invoice-important?logo=github&style=for-the-badge">
+  </a>
+  <a target="_blank" href="https://github.com/lorenzo-italiano/seasonsforce-ms-keycloak">
+    <img alt="github link" src="https://img.shields.io/badge/SEASONFORCE-Keycloak-important?logo=github&style=for-the-badge">
+  </a>
+  <a target="_blank" href="https://github.com/lorenzo-italiano/seasonsforce-ms-notification-api">
+    <img alt="github link" src="https://img.shields.io/badge/SEASONFORCE-Notification-important?logo=github&style=for-the-badge">
+  </a>
+  <a target="_blank" href="https://github.com/lorenzo-italiano/seasonsforce-ms-offer-api">
+    <img alt="github link" src="https://img.shields.io/badge/SEASONFORCE-Offer-important?logo=github&style=for-the-badge">
+  </a>
+  <a target="_blank" href="https://github.com/lorenzo-italiano/seasonsforce-ms-payment-api">
+    <img alt="github link" src="https://img.shields.io/badge/SEASONFORCE-Payment-important?logo=github&style=for-the-badge">
+  </a>
+  <a target="_blank" href="https://github.com/lorenzo-italiano/seasonsforce-ms-reference-api">
+    <img alt="github link" src="https://img.shields.io/badge/SEASONFORCE-Reference-important?logo=github&style=for-the-badge">
+  </a>
+  <a target="_blank" href="https://github.com/lorenzo-italiano/seasonsforce-ms-review-api">
+    <img alt="github link" src="https://img.shields.io/badge/SEASONFORCE-Review-important?logo=github&style=for-the-badge">
+  </a>
+  <a target="_blank" href="https://github.com/lorenzo-italiano/seasonsforce-ms-user-api">
+    <img alt="github link" src="https://img.shields.io/badge/SEASONFORCE-User-important?logo=github&style=for-the-badge">
+  </a>
+</div>
+
 ---
 
 © Romain Frezier & Lorenzo Italiano - IG5 Polytech Montpellier - 2023
